@@ -1,4 +1,9 @@
-const Header = () => {
+
+
+
+const Header = ({onDrawer}) => {
+
+
     return (
         <header className="d-flex justify-between align-center">
 
@@ -11,8 +16,8 @@ const Header = () => {
             </div>
 
             <ul className="headerRight d-flex  m-45 ">
-            <li className="mr-30">
-                <img width={18} height={18}src="/img/Group.svg" alt="" />
+            <li className="mr-30" >
+                <img className="cu-p"width={18} height={18} onClick ={onDrawer}  src="/img/Group.svg" alt="" />
                 <span className=" ml-10">1205 р.</span>
             </li>
             <li>
