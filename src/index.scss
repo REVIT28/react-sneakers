@@ -1,6 +1,7 @@
 
 
 body {
+ 
   margin: 0;
   font-family: Inter, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -24,6 +25,7 @@ code {
 }
 
 .wrapper {
+  
   background: #ffffff;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04);
   border-radius: 20px;
@@ -57,8 +59,47 @@ color:#F2F2F2;
 }
 
 .draver {
-  max-height: 100vh;
+  
+    padding-right: 17px;
+
+  max-height: 200vh;
   overflow: hidden
+
+  
+}
+
+.basket {
+  margin-top: 150px;
+  text-align: center;
+  justify-content: center;
+
+  b{
+    font-weight: 600;
+    font-size: 22px;
+    color: #000000;
+  }
+
+  p{
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+
+    color: #000000;
+
+    opacity: 0.4;
+
+  }
+
+
+   .return{
+    cursor: pointer;
+    opacity: 0.9;
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover{
+      opacity: 1;
+    }
+  }
 }
 
 .heart{
@@ -67,7 +108,7 @@ color:#F2F2F2;
 }  
 
 .search-block {
-
+position: relative;
 border: 1px solid #F3F3F3;
 border-radius: 10px;
  
@@ -76,6 +117,17 @@ border-radius: 10px;
     padding: 5px;
     width: 200px;
   }
+
+  .clearBtn{
+    position: absolute;
+    margin: 9px;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    
+
+  }
+
 }
 
 .slider {  

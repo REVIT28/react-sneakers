@@ -1,61 +1,127 @@
-
-import Cards from "./components/Cards/Cards";
+import Home from "./pages/Home";
+import Favorite from "./pages/Favourite";
 import Header from "./components/Header";
 import Draver from "./components/Draver";
-
+import axios from "axios";
+import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 
 
 
-const arr = [
-  {name:'Мужские Кроссовки Nike Blazer Mid Suede',  price: '12 999',  imagUrl:"/img/image 5.jpg", id: 1},
-  {name: 'Мужские Кроссовки Nike Air Max 270',      price: '12 999',  imagUrl:"/img/image 4.jpg", id: 2 },
-  {name:'Мужские Кроссовки Nike Blazer Mid Suede',  price: '8 499',   imagUrl:"/img/image 3.jpg", id: 3},
-  {name:'Кроссовки Puma X Aka Boku Future Rider',   price: '8 999',   imagUrl:"/img/image 2.jpg", id: 4},
-]
+
+
 
 function App() {
 
-  const [basket, setBasket] = useState(false)
-  
-    const onDrawer = () => {
-        
-        setBasket(basket => !basket ) 
-        document.body.style.overflow = "hidden" 
-         
+  const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [cartOpened, setCartOpened] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+
+    useEffect(() => {
+      
+  const getResourse =  async () => {
+    
+    const cartResponse = await axios.get("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart")   
+    const favoriteResponse = await axios.get("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/favorite")   
+    const itemsResponse = await axios.get("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/Items")
+    
+    setIsLoading(false)
+    setCartItems(cartResponse.data)
+    setFavorites(favoriteResponse.data)
+    setItems(itemsResponse.data)
+    
+ }
+      getResourse()
+    }, [])
+
+    const onRemoveCart =  (id) => {
+      axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart/${id}`)
+     setCartItems((prev) => prev.filter((item) => item.id !== id))  
+   }
+
+    const onChangeSearchInput = (e) => {
+      setSearchValue(e.target.value)  
     }
 
+  const onAddToCart =  (obj) => {
+    if(cartItems.find(item => Number(item.id) === Number(obj.id))) {
+      axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart/${obj.id}`)
+      setCartItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
+    } else {
+      axios.post("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart", obj)
+      setCartItems(cartItems => [...cartItems, obj] )
+    
+    }
+     
+  }
+
+ 
+
+  const onAddToFavorite =  async (obj) => {
+    try {
+      if (favorites.find((favObj) => favObj.id === obj.id)) {
+        axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/favorite/${obj.id}`)
+      } else {
+        const { data } = await axios.post("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/favorite", obj)
+    
+    setFavorites((prev) => [...prev, data] )
+      }
+    } catch (error) {
+      alert('Не удалось добавить в фавориты');
+    }
+    
+  }
+
   
+
+  
+  
+  
+    const onDrawer = () => {
+      setCartOpened(basket => !basket ) 
+        document.body.style.overflow = "hidden"     
+    }
+
+
   return (
-    <div className="wrapper clear">
-      {basket ? <Draver onDrawer = {() => onDrawer()} /> : document.body.style.overflow = "" }
+    <Router>
+        <div className="wrapper clear">
+      {cartOpened ? <Draver onRemoveCart = {(id) =>onRemoveCart(id)} items = {cartItems} onDrawer = {() => onDrawer()} /> : document.body.style.overflow = "" }
       
       <Header
       onDrawer={() => onDrawer()}
       />    
       
-      <div className="slider d-flex justify-between">
-        <img className = "m-10"width={99} height={40} src="/img/adidas.png" alt="" />
-        <img className ="frog" src="/img/example.png" alt="" />
-      </div>
-
-      <div className="content">
-        <div className="d-flex mb-40 align-center justify-between">
-          <h1 className="">Все кроссовки</h1>
-          <div className="search-block d-flex">
-            <img className="m-10" src="/img/Search.svg" alt="Search" />
-            <input placeholder = "Поиск..."/>
-          </div>
-        </div>
-      <Cards
-      arr = {arr}/>
+     <Routes>
+        <Route path = "/" element={ <Home
+               items={items}
+               searchValue={searchValue}
+               setSearchValue={setSearchValue}
+               onChangeSearchInput={onChangeSearchInput}
+               onAddToFavorite={onAddToFavorite}
+               onAddToCart={onAddToCart}
+               isLoading = {isLoading}
+              />}/>
+         <Route path = "/favorite" element={ <Favorite
+              items = {favorites}
+              onAddToFavorite = {onAddToFavorite}
+              isLoading = {isLoading}/>}/>
         
+     </Routes>
 
-      </div>
+      
     </div>
+    </Router>
   );
+
+  
 }
 
 export default App;
