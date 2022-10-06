@@ -1,13 +1,17 @@
 import Cards from "../components/Cards/Cards"
 
+import React from "react";
 
 function Home ({ items,
+  cartItems,
   searchValue,
   setSearchValue,
   onChangeSearchInput,
   onAddToFavorite,
   onAddToCart,
   isLoading,}) {
+
+    
 
     const renderItems = () => {
       const filtredItems = items.filter((item) =>
@@ -19,7 +23,10 @@ function Home ({ items,
           onFavorite={(obj) => onAddToFavorite(obj)}
           onPlus={(obj) => onAddToCart(obj)}
           loading={isLoading}
+          cartItems
+          
           {...item}
+         
         />
       ));
     };

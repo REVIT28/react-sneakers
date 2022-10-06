@@ -1,18 +1,20 @@
-
+import { AppContext } from "../../App";
+import { useContext } from "react";
 import { useState } from "react"
 import ContentLoader from "react-content-loader"
 
 import './CardItem.scss';
 
-const Cards = ({id, name, imagUrl, price, loading = false, onFavorite, onPlus,  favorited = false}) => {
+const Cards = ({id, name, imagUrl, price, onFavorite, onPlus, favorited = false, loading = false, }) => {
 
-    const [isAdded, setIsAdded] = useState(false)
+    const {isItemAdded } = useContext(AppContext) 
     const [isFavorite, setIsFavorite] = useState(favorited)
-       
 
-    const onAdd = () => {
+      
+
+    const onClickPlus = () => {
     onPlus({ id, name, imagUrl, price})
-    setIsAdded(!isAdded) 
+     
 
     // isAdded && console.log({name, price, imagUrl})
  }
@@ -56,7 +58,7 @@ const Cards = ({id, name, imagUrl, price, loading = false, onFavorite, onPlus,  
                     color: "#BDBDBD"}}>Цена</li>
                       <li className="fw-bold">{price} руб.</li>
                     </ul>
-                    <img className="card-button" onClick={onAdd} src={isAdded ? "/img/done.svg" : "/img/plus..svg"} alt="plus" />
+                    <img className="card-button"  onClick={onClickPlus}  src={isItemAdded(id) ?  "/img/done.svg" : "/img/plus..svg"} alt="plus" />
                     
                   </div>
               </>
