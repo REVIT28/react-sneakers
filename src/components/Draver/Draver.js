@@ -50,7 +50,7 @@ const Draver = ({onDrawer, items=[], onRemoveCart }) => {
 
             <div className="itemHead d-flex justify-between  mb-40  " >
                 <h2>Корзина</h2>
-                <img className="removeBtn cu-p" onClick ={onDrawer}  width={32} height={32} src="/img/ESC.svg" alt="" />
+                <img className="removeBtn cu-p" onClick ={onDrawer}  width={32} height={32} src="img/ESC.svg" alt="" />
             </div>
 
             {
@@ -65,7 +65,7 @@ const Draver = ({onDrawer, items=[], onRemoveCart }) => {
                           <p className="mb-5">{obj.name}</p>
                           <b >{obj.price} руб.</b>
                         </div>
-                        <img onClick = {() => onRemoveCart(obj.id)} className="removeBtn " width={32} height={32} src="/img/ESC.svg" alt="" />
+                        <img onClick = {() => onRemoveCart(obj.id)} className="removeBtn " width={32} height={32} src="img/ESC.svg" alt="" />
                       </div>
                       
                     ))}
@@ -82,7 +82,7 @@ const Draver = ({onDrawer, items=[], onRemoveCart }) => {
                       <div></div>
                       <b> {Math.floor(totalPrice / 100 * 5)} руб. </b>
                     </li>
-                    <img onClick = {onClickOrder} className=" order "src="/img/order.png" alt="" />
+                    <img onClick = {onClickOrder} className=" order "src="img/order.png" alt="" />
                   </ul> 
                 </div>
               ) : (
@@ -90,7 +90,7 @@ const Draver = ({onDrawer, items=[], onRemoveCart }) => {
                 <Info
                 name = {isOrderComplete ? "Заказ оформлен!" : "Корзина пустая"}
                 description= {isOrderComplete ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` :"Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."}
-                image =  {isOrderComplete ? "/img/mpty.png" : "/img/basket.jpg"}
+                image =  {isOrderComplete ? "img/mpty.png" : "img/basket.jpg"}
                 onClick = {onDrawer}
                 
                 />

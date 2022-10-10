@@ -13,7 +13,7 @@ const Info = ({name, image , description, onClick}) => {
                 <b>{name}</b>
                 <p>{description}</p>
             </div>
-            <img  onClick ={onClick} className=" return mt-40 "src="/img/return.png" alt="" />
+            <img  onClick ={onClick} className=" return mt-40 "src="img/return.png" alt="" />
         </div>
         
     )

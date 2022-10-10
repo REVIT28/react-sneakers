@@ -140,7 +140,7 @@ function App() {
       />    
       
      <Routes>
-        <Route path = "/" element={ <Home
+        <Route path = "" element={ <Home
                items={items}
                cartItems = {cartItems}
                searchValue={searchValue}
@@ -150,12 +150,12 @@ function App() {
                onAddToCart={onAddToCart}
                isLoading = {isLoading}
               />}/>
-         <Route path = "/favorite" element={ <Favorite
+         <Route path = "favorite" element={ <Favorite
              
               onAddToFavorite = {onAddToFavorite}
               
               />}/>
-        <Route path="/order" element = {<Order/>}/>
+        <Route path="order" element = {<Order/>}/>
         
      </Routes>
 
