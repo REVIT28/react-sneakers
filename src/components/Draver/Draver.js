@@ -1,9 +1,13 @@
-import Info from "./info"
-import { useState } from "react"
+import Info from "../info"
+
 import React from 'react'
-import { AppContext } from "../App"
-import { useContext } from "react"
 import axios from "axios"
+
+import { useState } from "react"
+import { AppContext } from "../../App"
+import { useContext } from "react"
+
+import './Draver.scss';
 
 const Draver = ({onDrawer, items=[], onRemoveCart }) => {
 
@@ -11,11 +15,15 @@ const Draver = ({onDrawer, items=[], onRemoveCart }) => {
   const {setCartItems, cartItems} = useContext(AppContext)
   const [orderId, swtOrderId] = useState(null)
 
+
+  
+  const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
+
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 
   const onClickOrder = async () => {
-    const {data} = await axios.post("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/Order" , {items: cartItems})
+    const {data} = await axios.post("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/order" , {items: cartItems})
     swtOrderId(data.id)
     
      
@@ -47,38 +55,35 @@ const Draver = ({onDrawer, items=[], onRemoveCart }) => {
 
             {
               items.length > 0 ? (
-                <div className=" d-flex flex-column flex">
-                  <div className="itemsCart ">
-              
-              {items.map((obj) => (
-                
-                <div key={obj.id} className="cartItem d-flex align-center ">
-                  <img className="mr-15 " width={70} height={70}src={obj.imagUrl} alt="" />
-                  <div className="mr-20">
-                    <p className="mb-5">{obj.name}</p>
-                    <b >{obj.price} руб.</b>
+                <div className=" cartsOr d-flex flex-column flex">
+                  <div className="cartsOrItem ">
+                    {items.map((obj) => (
+                      
+                      <div key={obj.id} className="cartItem d-flex align-center ">
+                        <img className="mr-15 " width={70} height={70}src={obj.imagUrl} alt="" />
+                        <div className="mr-20">
+                          <p className="mb-5">{obj.name}</p>
+                          <b >{obj.price} руб.</b>
+                        </div>
+                        <img onClick = {() => onRemoveCart(obj.id)} className="removeBtn " width={32} height={32} src="/img/ESC.svg" alt="" />
+                      </div>
+                      
+                    ))}
                   </div>
-                  <img onClick = {() => onRemoveCart(obj.id)} className="removeBtn " width={32} height={32} src="/img/ESC.svg" alt="" />
-                </div>
-                
-              ))}
-              
 
-            </div>
-
-            <ul className="cartTotalBlock">
-              <li className="d-flex align-end mt-20">
-                <span>Итого:</span>
-                <div></div>
-                <b>21 498 руб. </b>
-              </li>
-              <li className=" d-flex align-end mt-20">
-                <span>Налог 5%:</span>
-                <div></div>
-                <b>1074 руб. </b>
-              </li>
-              <img onClick = {onClickOrder} className=" order "src="/img/order.png" alt="" />
-            </ul> 
+                  <ul className="cartTotalBlock">
+                    <li className="d-flex align-end mt-20">
+                      <span>Итого:</span>
+                      <div></div>
+                      <b>{totalPrice} руб. </b>
+                    </li>
+                    <li className=" d-flex align-end mt-20">
+                      <span>Налог 5%:</span>
+                      <div></div>
+                      <b> {Math.floor(totalPrice / 100 * 5)} руб. </b>
+                    </li>
+                    <img onClick = {onClickOrder} className=" order "src="/img/order.png" alt="" />
+                  </ul> 
                 </div>
               ) : (
 

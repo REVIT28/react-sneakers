@@ -1,11 +1,15 @@
+import React from 'react'
+
 import Home from "./pages/Home";
 import Favorite from "./pages/Favourite";
+import Order from "./pages/Order";
 import Header from "./components/Header";
-import Draver from "./components/Draver";
+import Draver from "./components/Draver/Draver";
+
 import axios from "axios";
 import { BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
-import React from 'react'
+
 import { useState, useEffect, } from 'react'
 import { createContext } from "react";
 
@@ -29,6 +33,7 @@ function App() {
       
   async function getResourse ()  {
     
+   try{
     const cartResponse = await axios.get("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart")   
     const favoriteResponse = await axios.get("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/favorite")   
     const itemsResponse = await axios.get("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/Items")
@@ -37,30 +42,52 @@ function App() {
     setCartItems(cartResponse.data)
     setFavorites(favoriteResponse.data)
     setItems(itemsResponse.data)
+   } catch (error) {
+    alert("Ошибка при запросе данных с сервера")
+   }
   
  }
       getResourse()
     }, [])
 
     const onRemoveCart =  (id) => {
-      axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart/${id}`)
+      try {
+        axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart/${id}`)
      setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(id)))  
+      } catch (error) {
+        alert ("Не удалось удалить из корзины")
+      }
    }
 
     const onChangeSearchInput = (e) => {
       setSearchValue(e.target.value)  
     }
 
-    const onAddToCart = (obj) => {
-      
-  
-      if (cartItems.find((item) => item.id === obj.id)) {
-        axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart/${obj.id}`)
-        setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)));
+    const onAddToCart = async (obj) => {
+      try {
+        const findItem = cartItems.find((item) => Number(item.parentId) === Number(obj.id));
+      if (findItem) {
+        setCartItems((prev) => prev.filter((item) => Number(item.parentId) !== Number(obj.id)));
+        await axios.delete(`https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart/${findItem.id}`)
+         
       } else {
-        axios.post("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart", obj)
-        setCartItems((prev) => [...prev, obj]);    
+        setCartItems((prev) => [...prev, obj]);
+        const { data } = await axios.post("https://632f7e63b56bd6ac45b0b8d3.mockapi.io/cart", obj)
+        setCartItems((prev) =>
+        prev.map((item) => {
+          if (item.parentId === data.parentId) {
+            return {
+              ...item,
+              id: data.id,
+            };
+          }
+          return item;
+          }));    
+        }
+      } catch (error) {
+        alert ('Ошибка при добавлении в корзину')
       }
+      
   }
 
  
@@ -81,7 +108,7 @@ function App() {
   }
 
   const isItemAdded = (id) => {
-    return cartItems.some((obj) => Number(obj.id) === Number(id));
+    return cartItems.some((obj) => Number(obj.parentId) === Number(id));
   };
 
   
@@ -95,6 +122,7 @@ function App() {
 
   return (
     <AppContext.Provider value = {{items,
+      
       cartItems,
       favorites,
       isItemAdded,
@@ -103,7 +131,9 @@ function App() {
       setCartItems,}}>
       <Router>
         <div className="wrapper clear">
-      {cartOpened ? <Draver onRemoveCart = {(id) =>onRemoveCart(id)} items = {cartItems} onDrawer = {() => onDrawer()} /> : document.body.style.overflow = "" }
+      {cartOpened ? <Draver
+       onRemoveCart = {(id) =>onRemoveCart(id)} items = {cartItems} onDrawer = {() => onDrawer()} 
+       opened = {cartOpened}/> : document.body.style.overflow = "" }
       
       <Header
       onDrawer={() => onDrawer()}
@@ -125,6 +155,7 @@ function App() {
               onAddToFavorite = {onAddToFavorite}
               
               />}/>
+        <Route path="/order" element = {<Order/>}/>
         
      </Routes>
 

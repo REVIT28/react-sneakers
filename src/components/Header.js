@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom"
-
+import { AppContext } from "../App"
+import { useContext } from "react"
+import React from 'react'
 
 const Header = ({onDrawer}) => {
+
+    const { cartItems } = useContext(AppContext);
+  const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
+  
 
 
     return (
@@ -21,7 +27,7 @@ const Header = ({onDrawer}) => {
             <ul className="headerRight d-flex  m-45 ">
             <li className="mr-30" >
                 <img className="cu-p"width={18} height={18} onClick ={onDrawer}  src="/img/Group.svg" alt="" />
-                <span className=" ml-10">1205 р.</span>
+                <span className=" ml-10">{totalPrice} р.</span>
             </li>
             <li>
                <Link to = "/favorite">
@@ -29,10 +35,15 @@ const Header = ({onDrawer}) => {
                </Link>
             </li>
             <li>
-                <img width={18} height={18} src="/img/Union.svg" alt="" />
+                <Link to = "/order">
+                    <img width={18} height={18} src="/img/Union.svg" alt="" />
+                </Link>    
             </li>
             </ul>
         </header>
     )
 }
 export default Header
+
+
+
